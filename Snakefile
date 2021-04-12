@@ -1,4 +1,4 @@
-# use snakemake to run this Snakefile
+# use snakemake to run this Snakefile pipeline
 # the final rule lmmlasso is to be skipped or modified by the user as my corresponding script for genotype - phenotype trait prediction is only soon available
 
 
@@ -8,7 +8,7 @@ GEN = ['bed', 'bim', 'fam']
 MAF = '0.04'
 GENO = '0.02'
 PRUNELD =  '0.5'
-LIST_FILE = str( expand("chr{chromosome}_maf{maf}_geno{geno}_pruned0.5" ,chromosome=CHR, maf=MAF, geno=GENO) ).split()       # input for the rule lmmlasso
+LIST_FILE = str( expand("chr{chromosome}_maf{maf}_geno{geno}_pruned{prun}" ,chromosome=CHR, maf=MAF, geno=GENO, prun=PRUNELD) ).split()       # input for the rule lmmlasso
 
 
 genetic_path = "/directory/with/bedbimfam/files/microarray/unzipped"
@@ -57,9 +57,9 @@ rule plink_extract:
     params:
         infile = expand(derived_path + "/ukb_chr{chromosome}_maf{maf}_geno{geno}", chromosome=CHR, maf=MAF, geno=GENO),
         prune = expand(derived_path + "/ukb_chr{chromosome}_maf{maf}_geno{geno}.prune.in", chromosome=CHR, maf=MAF, geno=GENO),
-        outfile = expand(derived_path + "/chr{chromosome}_maf{maf}_geno{geno}_pruned0.5", chromosome=CHR, maf=MAF, geno=GENO)
+        outfile = expand(derived_path + "/chr{chromosome}_maf{maf}_geno{geno}_pruned{prun}", chromosome=CHR, maf=MAF, geno=GENO, prun=PRUNELD)
     output:
-        expand(derived_path + "/chr{chromosome}_maf{maf}_geno{geno}_pruned0.5.{ext}", ext=GEN ,chromosome=CHR, maf=MAF, geno=GENO)
+        expand(derived_path + "/chr{chromosome}_maf{maf}_geno{geno}_pruned{prun}.{ext}", ext=GEN ,chromosome=CHR, maf=MAF, geno=GENO, prun=PRUNELD)
     run:
         for infile, prune, outfile in zip(params.infile, params.prune, params.outfile):
             shell("/home/Aliki.Zavaropoulou/plink2 --bfile {infile} --extract {prune} --make-bed --out {outfile}")
@@ -67,9 +67,9 @@ rule plink_extract:
 
 rule lmmlasso:
     input:
-      bed = expand(derived_path + "/chr{chromosome}_maf{maf}_geno{geno}_pruned0.5.bed" ,chromosome=CHR, maf=MAF, geno=GENO),
-      bim = expand(derived_path + "/chr{chromosome}_maf{maf}_geno{geno}_pruned0.5.bim" ,chromosome=CHR, maf=MAF, geno=GENO),
-      fam = expand(derived_path + "/chr{chromosome}_maf{maf}_geno{geno}_pruned0.5.fam" ,chromosome=CHR, maf=MAF, geno=GENO)
+      bed = expand(derived_path + "/chr{chromosome}_maf{maf}_geno{geno}_pruned{prun}.bed" ,chromosome=CHR, maf=MAF, geno=GENO, prun=PRUNELD),
+      bim = expand(derived_path + "/chr{chromosome}_maf{maf}_geno{geno}_pruned{prun}.bim" ,chromosome=CHR, maf=MAF, geno=GENO, prun=PRUNELD),
+      fam = expand(derived_path + "/chr{chromosome}_maf{maf}_geno{geno}_pruned{prun}.fam" ,chromosome=CHR, maf=MAF, geno=GENO, prun=PRUNELD)
     params:
       inname = LIST_FILE ,
       toremove = derived_path + "/chr*.log"
