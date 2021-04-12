@@ -13,3 +13,10 @@ Each step {parametervalue in Snakefile} :
 4.  _lmmlasso_ TO BE SKIPPED OR ALTERED : Used to perform phenotype trait prediction based on the genotype, coupled to a tool which is to be publically available soon.
 
 More information on the functionalities of PLINK 2.0 are available directly on the website https://www.cog-genomics.org/plink/2.0
+
+
+# RUN
+
+If to include the last step  _lmmlasso_ , set up the conda environment using the provided newpy3.yaml file.
+
+Execute the command: snakemake --cores 6 --use-conda /resultdir/samples_height_withconf_pr0.5.pdf
