@@ -1,4 +1,4 @@
-# QRgenomicfiltering
+# QCgenomicfiltering
 
 A pipeline deploying snakemake to perform filtering of genomic data files using the tool PLINK 2.0. Input is one or multiple genomic data files at the same time in .bed, .bim, .fam format (PLINK). The directed acyclic graph (DAG) below displays the sequence of steps in the pipeline.
 
